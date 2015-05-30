@@ -27,10 +27,12 @@
             <kind>1</kind>
             <string>/// init
 
-self.speed = 5;
-self.friction = 2;
 self.state = state_idle;
-self.new_state = false;
+self.new_state = true;
+
+self.left_key = vk_left;
+self.right_key = vk_right;
+self.jump_key = vk_up;
 </string>
           </argument>
         </arguments>
@@ -64,6 +66,59 @@ if (current != self.state) {
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// fall when in air
+
+if state != state_falling {
+    if place_empty(x,y+1) {
+        state = state_falling;
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_basic_platorm">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Run the collision script
+
+scr_test_collision(other);
+
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="7" enumb="12">
       <action>
@@ -85,8 +140,12 @@ if (current != self.state) {
             <string>/// FALLING STATE
 
 if (self.new_state) {
+    self.gravity = 1;
+    self.vspeed = -20;
     self.new_state = false;
 }
+
+
 </string>
           </argument>
         </arguments>
@@ -112,18 +171,22 @@ if (self.new_state) {
             <string>/// WALKING STATE
 
 if (self.new_state) {
+    self.image_speed = 7/30;
     self.speed = 5;
-    self.image_speed = 5;
     self.new_state = false;
 }
 
-if (keyboard_check(vk_right)) {
+if (keyboard_check(self.jump_key)) {
+    self.state = state_falling;
+}
+
+else if (keyboard_check(self.right_key)) {
     self.sprite_index = spr_player_walking_right;
     self.direction = 0;
 }
 
-if (keyboard_check(vk_left)) {
-    self.sprite_index = spr_player_walking_right;
+else if (keyboard_check(self.left_key)) {
+    self.sprite_index = spr_player_walking_left;
     self.direction = 180;
 }
 
@@ -155,17 +218,19 @@ else {
             <string>/// IDLE STATE
 
 if (self.new_state) {
+    self.image_speed = 0;
+    self.speed = 0;
     self.new_state = false;
 }
     
-if (keyboard_check(vk_right)) || (keyboard_check(vk_left)) {
+if (keyboard_check(self.right_key)) || (keyboard_check(self.left_key)) {
     self.state = state_walking;
-    self.new_state = true;
 }
 
-else {
-    self.state = state_walking;
+if (keyboard_check(self.jump_key)) {
+    self.state = state_falling;
 }
+
 </string>
           </argument>
         </arguments>
