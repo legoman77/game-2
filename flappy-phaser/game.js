@@ -13,7 +13,7 @@ var cursors;
 function preload() {
   game.stage.backgroundColor = '#bbbbbb';
   game.load.image('background','background.gif');
-  game.load.image('flappy','flappy.gif');
+  game.load.spritesheet('flappy','Flappy Bird (2).png', 64, 21);
   game.load.image('top_pipe','top-pipe.gif');
   game.load.image('bottom_pipe','bottom-pipe.gif');
 }
@@ -23,6 +23,10 @@ function create() {
   background = game.add.tileSprite(0,0,320,568,'background');
   background.autoScroll(-100,0);
   flappy = game.add.sprite(20,300,'flappy');
+  flappy.scale.set(1);
+  flappy.smoothed = false;
+  flappy.animations.add('fly',[0,1,2,3,4,5], 5, true);
+  flappy.play('fly');
   game.physics.enable(flappy, Phaser.Physics.ARCADE);
   flappy.body.gravity.y = 500;
   //flap = flappy.body.velocity.y = -300;
