@@ -8,6 +8,7 @@ var flappy;
 var top_pipe;
 var bottom_pipe;
 var cursors;
+var pipey;
 //var flap;
 
 function preload() {
@@ -33,9 +34,11 @@ function create() {
   top_pipe = game.add.sprite(300,-400,'top_pipe');
   game.physics.enable(top_pipe, Phaser.Physics.ARCADE);
   top_pipe.body.velocity.x = -100;
+  top_pipe.body.immovable = true;
   bottom_pipe = game.add.sprite(300,400,'bottom_pipe');
   game.physics.enable(bottom_pipe, Phaser.Physics.ARCADE);
   bottom_pipe.body.velocity.x = -100;
+  bottom_pipe.body.immovable = true;
   cursors = game.input.keyboard.createCursorKeys();
   //game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
   //var flapKey = input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -47,17 +50,20 @@ function update() {
   if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
     flappy.body.velocity.y = -300;
   }
-  if (top_pipe.x <= 0) {
+  pipey = game.rnd.integerInRange(30,500);
+  if (top_pipe.x < -50) {
     top_pipe.x = 300;
+    top_pipe.y = pipey - 15;
   }
-  if (bottom_pipe.x <= 0) {
+  if (bottom_pipe.x < -50) {
     bottom_pipe.x = 300;
+    bottom_pipe.y = pipey + 15  
   }
   if (game.physics.arcade.collide(flappy, top_pipe)) {
-    flappy.destroy();
+    game.destroy();
   }
   if (game.physics.arcade.collide(flappy, bottom_pipe)) {
-    flappy.destroy();
+    game.destroy();
   }
 }
 
